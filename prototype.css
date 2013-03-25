@@ -1,0 +1,53 @@
+body {
+  background-color: cornflowerblue;
+  position: relative;
+  height: 800px;
+}
+
+body:after {
+  content: "";
+  position: absolute;
+  z-index: 800;
+  display: block;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.reservo-container {
+  position: absolute;
+  box-sizing: border-box;
+  width: 650px;
+  height: 400px;
+  left: 50%;
+  top: 50%;
+  margin-left: -325px;
+  margin-top: -200px;
+  background-color: hsl(0,0%,95%);
+  padding: 20px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.75);
+  z-index: 900;
+  font-family: "open-sans", sans-serif;
+  font-weight: 400;
+}
+
+.reservo-container h1 {
+  font-size: background;
+}
+
+.reservo-brev {
+  line-height: 2;
+  padding: 20px;
+  border: solid 1px hsl(0,0%,80%);
+}
+
+.reservo-brev p {
+  margin: 0;
+}
+
+.reservo-brev p input {
+  border: solid 1px hsl(0,0%,80%);
+  padding: 5px;
+}
