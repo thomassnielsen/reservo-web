@@ -12,7 +12,11 @@
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
-  <div class="reservo-container">
+  <section class="reservo-container">
+    <header>
+      <h1>Min reservasjon</h1>
+      <a href="#" id="reservo-overlay-lukk" class="reservo-overlay-lukk">x</a>
+    </header>
     <section class="reservo-brev">
       <p>Jeg, <input type="text" placeholder="Jan Petter" /> ønsker å reservere et bord for <input type="number" max="24" min="1" value="3"/> personer på Sumo <select name="dag">
         <option>i dag</option>
@@ -65,17 +69,11 @@
         <option>20:30</option>
         <option>20:45</option>
         <option disabled>21:00</option>
-        <option disabled>21:15</option>
-        <option disabled>21:30</option>
-        <option disabled>21:45</option>
-        <option disabled>22:00</option>
-        <option disabled>22:15</option>
-        <option disabled>22:30</option>
-        <option disabled>22:45</option>
+        <option disabled>– – – –</option>
         <option disabled>23:00</option>
-      </select>. Dere kan nå meg på <input type="tel" placeholder="12345678" />(mobil).
-      </p>
+      </select>.</p>
+      <p>Dere kan nå meg på <input type="tel" placeholder="12345678" />(mobil).</p>
     </section>
-  </div>
+  </section>
 </body>
 </html>

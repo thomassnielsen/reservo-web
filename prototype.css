@@ -1,5 +1,5 @@
 body {
-  background-color: cornflowerblue;
+  background-color: white;
   position: relative;
   height: 800px;
 }
@@ -19,28 +19,60 @@ body:after {
 .reservo-container {
   position: absolute;
   box-sizing: border-box;
-  width: 650px;
+  width: 450px;
   height: 400px;
   left: 50%;
   top: 50%;
-  margin-left: -325px;
+  margin-left: -225px;
   margin-top: -200px;
   background-color: hsl(0,0%,95%);
-  padding: 20px;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.75);
   z-index: 900;
   font-family: "open-sans", sans-serif;
   font-weight: 400;
 }
 
-.reservo-container h1 {
-  font-size: background;
+.reservo-container header {
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.reservo-container header h1 {
+  font-style: italic;
+  font-size: 24px;
+  text-align: center;
+  margin: 0;
+}
+
+.reservo-overlay-lukk {
+  width: 30px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  border: 0;
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+  background-image: url("assets/assets.png");
+  background-position: -60px 0;
+  background-repeat: no-repeat;
+}
+
+.reservo-overlay-lukk:hover {
+  background-position: -60px -30px;
 }
 
 .reservo-brev {
-  line-height: 2;
+  line-height: 2.5;
   padding: 20px;
+  margin: 20px;
   border: solid 1px hsl(0,0%,80%);
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .reservo-brev p {
@@ -50,4 +82,10 @@ body:after {
 .reservo-brev p input {
   border: solid 1px hsl(0,0%,80%);
   padding: 5px;
+  margin: 0 5px;
+}
+
+.reservo-brev p input:focus {
+  border-color: hsl(0,0%,50%);
+  outline: none;
 }
