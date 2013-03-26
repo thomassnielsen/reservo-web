@@ -154,6 +154,7 @@ var containerSection = document.getElementById("reservo-container");
 	var phoneField = document.createElement("input");
 	phoneField.type = "tel";
 	phoneField.setAttribute("placeholder", "12345678");
+<<<<<<< HEAD
 	
 	// Yeah a fucking montage!
 	var inputSectionWrapper = document.createElement("fieldset");
@@ -174,6 +175,25 @@ var containerSection = document.getElementById("reservo-container");
 	continueButton.className = "reservo-button";
 	continueButton.innerHTML = "Fortsett";
 	continueButton.setAttribute("onClick", "findAvailableStations();");
+=======
+
+	var continueButton = document.createElement("button");
+	continueButton.innerHTML = "continue";
+	continueButton.setAttribute("onClick", "findAvailableStations();");
+
+	// We need a montage!
+	inputSection.innerHTML += "Jeg, ";
+	inputSection.appendChild(nameField);
+	inputSection.innerHTML += " ønsker å reservere et bord for ";
+	inputSection.appendChild(peopleCountField);
+	inputSection.innerHTML += " personer på "+reservoRestaurantData.name+" ";
+	inputSection.appendChild(datePicker);
+	inputSection.innerHTML += " klokken ";
+	inputSection.appendChild(timePicker);
+	inputSection.innerHTML += ". Dere kan nå meg på ";
+	inputSection.appendChild(phoneField);
+	inputSection.innerHTML += " (mobil).<br>";
+>>>>>>> 2563b24b770548031964fe5e0435b627e225e2bc
 	inputSection.appendChild(continueButton);
 
 	containerSection.appendChild(inputSection);
@@ -224,10 +244,15 @@ function animateInputFieldsOut()
 	// Animate instead of hidden here
 	inputSection.className = inputSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
 	stationSection.className += " reservo-active";
+<<<<<<< HEAD
+	
+	addStationElementsToDOM();
+=======
 	containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-brev-active(?!\S)/g , '');
 	containerSection.className += " reservo-bordvalg-active";
 
 //	addStationElementsToDOM();
+>>>>>>> 2563b24b770548031964fe5e0435b627e225e2bc
 }
 
 /* Button / Control functions */
