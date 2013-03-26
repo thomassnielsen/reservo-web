@@ -12,6 +12,6 @@
 	<script src="reservo.js"></script>
 
 	<div id="test"></div>
-	<button type="button" onclick="loadRestaurant(5)">Run reservo</button>
+	<button type="button" onclick="loadReservoWithRestaurant(5)">Run reservo</button>
 </body>
 </html>
