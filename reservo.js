@@ -1,7 +1,7 @@
 var reservoRestaurantData;
 
 /* Load data */
-function loadRestaurant(id, renderInput)
+function loadRestaurant(id, renderInput, renderStations)
 {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()
@@ -11,11 +11,30 @@ function loadRestaurant(id, renderInput)
 		    parseRestaurantJSON(xmlhttp.responseText);
 		    if (renderInput)
 			    createInputFields();
+			  if (renderStations)
+			    animateInputFieldsOut();
 	    }
 	  }
 	xmlhttp.open("POST","http://pido.cc/api_open/get_restaurant_by_id",true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlhttp.send("id="+id);
+}
+
+function loadAvailableStationsForPlaceTimeAndPeople(id, time, people, renderStations)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+		    parseStationJSON(xmlhttp.responseText);
+			  if (renderStations)
+			    animateInputFieldsOut();
+	    }
+	  }
+	xmlhttp.open("POST","http://pido.cc/api_open/get_available_stations_for_time_and_place_and_peoplecount",true);
+	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlhttp.send("place_id="+id+"&time="+time+"&people="+people);
 }
 
 function parseRestaurantJSON(data)
@@ -24,14 +43,30 @@ function parseRestaurantJSON(data)
 	reservoRestaurantData = parsedData;
 }
 
+function parseStationJSON(data)
+{
+	var parsedData = JSON.parse(data);
+	reservoRestaurantData.stations = parsedData;
+}
+
 /* Render page */
 function createInputFields()
 {
-	if (document.getElementById("reservoInput")) 
+var containerSection = document.getElementById("reservo-container");
+	if (!containerSection) 
+	{
+		containerSection = document.createElement("section");
+		containerSection.id = "reservo-container";
+		containerSection.className = "reservo-container";
+		document.body.appendChild(containerSection);
+	}
+
+	if (document.getElementById("reservo-brev")) 
 		return; // No need to create it twice
 
 	var inputSection = document.createElement("section");
-	inputSection.id = "reservoInput";
+	inputSection.id = "reservo-brev";
+	inputSection.className = "reservo-brev";
 	
 	// Example: <input type="text" placeholder="Jan Petter">
 	var nameField = document.createElement("input");
@@ -103,12 +138,12 @@ function createInputFields()
 	}
 	
 	var phoneField = document.createElement("input");
-	phoneField.type = "phone";
+	phoneField.type = "tel";
 	phoneField.setAttribute("placeholder", "12345678");
 	
 	var continueButton = document.createElement("button");
 	continueButton.innerHTML = "continue";
-	continueButton.onclick = "showAvailableStations()";
+	continueButton.setAttribute("onClick", "findAvailableStations();");
 	
 	// We need a montage!
 	inputSection.innerHTML += "Jeg, ";
@@ -124,11 +159,16 @@ function createInputFields()
 	inputSection.innerHTML += " (mobil).<br>";
 	inputSection.appendChild(continueButton);
 	
-	document.body.appendChild(inputSection);
+	containerSection.appendChild(inputSection);
 }
 
 function addStationElementsToDOM()
 {
+	if (!reservoRestaurantData.stations)
+	{
+		loadAvailableStationsForPlaceTimeAndPeople(5, 1364302096, 6, true);
+		return;
+	}
 	for (var station in reservoRestaurantData.stations)
 	{
 		var stationObject = reservoRestaurantData.stations[station];
@@ -141,24 +181,32 @@ function addStationElementsToDOM()
 		var stationImage = new Image();
 		stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
 		stationElement.appendChild(stationImage);
-		
-		document.body.appendChild(stationElement);
+  	document.getElementById("reservo-container").appendChild(stationElement);
 	}
 }
 
+function animateInputFieldsOut()
+{
+	var inputSection = document.getElementById("reservo-brev");
 
+	// Animate instead of hidden here
+	inputSection.style.display = "none";
+	
+	addStationElementsToDOM();
+}
 
 /* Button / Control functions */
 function loadReservoWithRestaurant(id)
 {
-	loadRestaurant(id, true);
+	loadRestaurant(id, true, false);
 }
 
-function showAvailableStations()
+function findAvailableStations()
 {
 	if (!reservoRestaurantData)
-		loadRestaurant(reservoRestaurantId, false)
-	
+		loadRestaurant(reservoRestaurantId, false, true);
+	else
+		animateInputFieldsOut();
 }
 
 function selectStation(id)
@@ -167,7 +215,7 @@ function selectStation(id)
 	{
 		var stationObject = reservoRestaurantData.stations[station];
 		var stationElement = document.getElementById("station"+stationObject.id);
-		stationElement.className = stationElement.className.replace( /(?:^|\s)reservoFloatLeft(?!\S)/g , '');
+		stationElement.className = stationElement.className.replace( /(?:^|\s)reservoSelectedStation(?!\S)/g , '');
 	}
 
 	var stationElement = document.getElementById("station"+id);

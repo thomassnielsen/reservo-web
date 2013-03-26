@@ -16,12 +16,12 @@
   </script>
 </head>
 <body>
-  <section class="reservo-container">
+  <section id="reservo-container" class="reservo-container">
     <header>
       <h1>Min reservasjon</h1>
       <a href="#" id="reservo-overlay-lukk" class="reservo-overlay-lukk">x</a>
     </header>
-    <section class="reservo-brev">
+    <section id="reservo-brev" class="reservo-brev">
       <fieldset>
         <p>Jeg, <input type="text" placeholder="Jan Petter" /> ønsker å reservere et bord for <input type="number" max="24" min="1" value="3"/> personer på Sumo <select name="dag">
           <option>i dag</option>
@@ -79,7 +79,7 @@
         </select>.</p>
         <p>Dere kan nå meg på <input type="tel" placeholder="12345678" />(mobil).</p>
       </fieldset>
-      <a class="reservo-button">Go forth!</a>
+      <a class="reservo-button" onclick="findAvailableStations();">Go forth!</a>
     </section>
     <section class="reservo-bordvalg">
       Something or other.
