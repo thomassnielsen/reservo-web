@@ -106,6 +106,10 @@ function createInputFields()
 	phoneField.type = "phone";
 	phoneField.setAttribute("placeholder", "12345678");
 	
+	var continueButton = document.createElement("button");
+	continueButton.innerHTML = "continue";
+	continueButton.onclick = "showAvailableStations()";
+	
 	// We need a montage!
 	inputSection.innerHTML += "Jeg, ";
 	inputSection.appendChild(nameField);
@@ -117,7 +121,8 @@ function createInputFields()
 	inputSection.appendChild(timePicker);
 	inputSection.innerHTML += ". Dere kan nå meg på ";
 	inputSection.appendChild(phoneField);
-	inputSection.innerHTML += " (mobil).";
+	inputSection.innerHTML += " (mobil).<br>";
+	inputSection.appendChild(continueButton);
 	
 	document.body.appendChild(inputSection);
 }
@@ -141,6 +146,8 @@ function addStationElementsToDOM()
 	}
 }
 
+
+
 /* Button / Control functions */
 function loadReservoWithRestaurant(id)
 {
@@ -151,6 +158,7 @@ function showAvailableStations()
 {
 	if (!reservoRestaurantData)
 		loadRestaurant(reservoRestaurantId, false)
+	
 }
 
 function selectStation(id)
@@ -159,7 +167,7 @@ function selectStation(id)
 	{
 		var stationObject = reservoRestaurantData.stations[station];
 		var stationElement = document.getElementById("station"+stationObject.id);
-		stationElement.className = "reservoFloatLeft";
+		stationElement.className = stationElement.className.replace( /(?:^|\s)reservoFloatLeft(?!\S)/g , '');
 	}
 
 	var stationElement = document.getElementById("station"+id);
