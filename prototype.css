@@ -67,8 +67,11 @@ body:after {
 
 .reservo-brev {
   line-height: 2.5;
-  padding: 20px;
   margin: 20px;
+}
+
+.reservo-brev fieldset {
+  padding: 20px;
   border: solid 1px hsl(0,0%,80%);
   -moz-border-radius: 5px;
   -o-border-radius: 5px;
@@ -88,4 +91,8 @@ body:after {
 .reservo-brev p input:focus {
   border-color: hsl(0,0%,50%);
   outline: none;
+}
+
+.reservo-bordvalg {
+  display: none;
 }
