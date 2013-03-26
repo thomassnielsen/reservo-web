@@ -66,7 +66,7 @@ var containerSection = document.getElementById("reservo-container");
 
 	var inputSection = document.createElement("section");
 	inputSection.id = "reservo-brev";
-	inputSection.className = "reservo-brev";
+	inputSection.className = "reservo-seksjon reservo-brev reservo-active";
 	
 	// Example: <input type="text" placeholder="Jan Petter">
 	var nameField = document.createElement("input");
@@ -173,28 +173,32 @@ function addStationElementsToDOM()
 	{
 		var stationObject = reservoRestaurantData.stations[station];
 		
-		var stationElement = document.createElement("figure");
-		stationElement.className = "reservoFloatLeft";
-		stationElement.id = "station"+stationObject.id;
-		stationElement.setAttribute('onclick', "selectStation("+stationObject.id+");");
+		var stationElement = document.createElement("li");
+		
+		var stationImageWrapper = document.createElement("figure");
+		stationImageWrapper.className = "reservoFloatLeft";
+		stationImageWrapper.id = "station"+stationObject.id;
+		stationImageWrapper.setAttribute('onclick', "selectStation("+stationObject.id+");");
 		
 		var stationImage = new Image();
 		stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
-		stationElement.appendChild(stationImage);
-  	document.getElementById("reservo-container").appendChild(stationElement);
+		stationImageWrapper.appendChild(stationImage);
+		stationElement.appendChild(stationImageWrapper);
+		
+  	document.getElementById("reservo-bordvalg").appendChild(stationElement);
 	}
 }
 
 function animateInputFieldsOut()
 {
 	var inputSection = document.getElementById("reservo-brev");
-	var stationSection = document.getElementById("");
+	var stationSection = document.getElementById("reservo-bordvalg");
 
 	// Animate instead of hidden here
-	inputSection.style.display = "none";
+	inputSection.className = inputSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
+	stationSection.className += " reservo-active";
 	
-	
-	addStationElementsToDOM();
+//	addStationElementsToDOM();
 }
 
 /* Button / Control functions */

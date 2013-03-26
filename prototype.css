@@ -112,7 +112,7 @@ body:after {
   outline: none;
 }
 
-.reservo-active, .reservo-removed {
+.reservo-xyz, .reservo-removed {
   -webkit-animation-fill-mode:both;
   -moz-animation-fill-mode:both;
   -ms-animation-fill-mode:both;
@@ -125,11 +125,11 @@ body:after {
   animation-duration:1s;
 }
 
-.reservo-seksjon.active {
+.reservo-seksjon.reservo-active {
   display:block;
 }
 
-.reservo-seksjon:not(.active) {
+.reservo-seksjon:not(.reservo-active) {
   display:none;
 }
 
