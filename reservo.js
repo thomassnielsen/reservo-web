@@ -1,3 +1,4 @@
+var retina = window.devicePixelRatio >= 1.3;
 var reservoRestaurantData;
 
 /* Load data */
@@ -58,6 +59,19 @@ var containerSection = document.getElementById("reservo-container");
 		containerSection = document.createElement("section");
 		containerSection.id = "reservo-container";
 		containerSection.className = "reservo-container";
+		
+		var header = document.createElement("header");
+		header.innerHTML = "<h1>Min reservasjon</h1>";
+		
+		var closeButton = document.createElement("a");
+		closeButton.id = "reservo-overlay-lukk";
+		closeButton.setAttribute("href", "#");
+		closeButton.className = "reservo-overlay-lukk";
+		closeButton.innerHTML = "x";
+		
+		// We need a montage!
+		header.appendChild(closeButton);
+		containerSection.appendChild(header);		
 		document.body.appendChild(containerSection);
 	}
 
@@ -141,25 +155,33 @@ var containerSection = document.getElementById("reservo-container");
 	phoneField.type = "tel";
 	phoneField.setAttribute("placeholder", "12345678");
 	
-	var continueButton = document.createElement("button");
-	continueButton.innerHTML = "continue";
-	continueButton.setAttribute("onClick", "findAvailableStations();");
+	// Yeah a fucking montage!
+	var inputSectionWrapper = document.createElement("fieldset");
+	inputSectionWrapper.innerHTML += "Jeg, ";
+	inputSectionWrapper.appendChild(nameField);
+	inputSectionWrapper.innerHTML += " ønsker å reservere et bord for ";
+	inputSectionWrapper.appendChild(peopleCountField);
+	inputSectionWrapper.innerHTML += " personer på "+reservoRestaurantData.name+" ";
+	inputSectionWrapper.appendChild(datePicker);
+	inputSectionWrapper.innerHTML += " klokken ";
+	inputSectionWrapper.appendChild(timePicker);
+	inputSectionWrapper.innerHTML += ". Dere kan nå meg på ";
+	inputSectionWrapper.appendChild(phoneField);
+	inputSectionWrapper.innerHTML += " (mobil).<br>";
+	inputSection.appendChild(inputSectionWrapper);
 	
-	// We need a montage!
-	inputSection.innerHTML += "Jeg, ";
-	inputSection.appendChild(nameField);
-	inputSection.innerHTML += " ønsker å reservere et bord for ";
-	inputSection.appendChild(peopleCountField);
-	inputSection.innerHTML += " personer på "+reservoRestaurantData.name+" ";
-	inputSection.appendChild(datePicker);
-	inputSection.innerHTML += " klokken ";
-	inputSection.appendChild(timePicker);
-	inputSection.innerHTML += ". Dere kan nå meg på ";
-	inputSection.appendChild(phoneField);
-	inputSection.innerHTML += " (mobil).<br>";
+	var continueButton = document.createElement("a");
+	continueButton.className = "reservo-button";
+	continueButton.innerHTML = "Fortsett";
+	continueButton.setAttribute("onClick", "findAvailableStations();");
 	inputSection.appendChild(continueButton);
 	
 	containerSection.appendChild(inputSection);
+	
+	var stationSection = document.createElement("section");
+	stationSection.id = "reservo-bordvalg";
+	stationSection.className = "reservo-seksjon reservo-bordvalg";
+	containerSection.appendChild(stationSection);
 }
 
 function addStationElementsToDOM()
@@ -182,6 +204,10 @@ function addStationElementsToDOM()
 		
 		var stationImage = new Image();
 		stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
+		if (retina)
+			stationImage.src = stationImage.src.replace('.jpg', '@2x.jpg');
+		stationImage.style.width = "280px";
+		stationImage.style.height = "280px";
 		stationImageWrapper.appendChild(stationImage);
 		stationElement.appendChild(stationImageWrapper);
 		
@@ -198,7 +224,7 @@ function animateInputFieldsOut()
 	inputSection.className = inputSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
 	stationSection.className += " reservo-active";
 	
-//	addStationElementsToDOM();
+	addStationElementsToDOM();
 }
 
 /* Button / Control functions */
