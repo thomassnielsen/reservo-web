@@ -53,7 +53,7 @@ function parseStationJSON(data)
 function createInputFields()
 {
 var containerSection = document.getElementById("reservo-container");
-	if (!containerSection) 
+	if (!containerSection)
 	{
 		containerSection = document.createElement("section");
 		containerSection.id = "reservo-container";
@@ -61,26 +61,26 @@ var containerSection = document.getElementById("reservo-container");
 		document.body.appendChild(containerSection);
 	}
 
-	if (document.getElementById("reservo-brev")) 
+	if (document.getElementById("reservo-brev"))
 		return; // No need to create it twice
 
 	var inputSection = document.createElement("section");
 	inputSection.id = "reservo-brev";
 	inputSection.className = "reservo-seksjon reservo-brev reservo-active";
-	
+
 	// Example: <input type="text" placeholder="Jan Petter">
 	var nameField = document.createElement("input");
 	nameField.type = "text";
 	nameField.setAttribute("placeholder", "Jan Petter");
-	
+
 	// Example: <input type="number" max="24" min="1" value="3">
 	var peopleCountField = document.createElement("input");
 	peopleCountField.type = "number";
 	peopleCountField.setAttribute("max", reservoRestaurantData.max_booking);
 	peopleCountField.setAttribute("min", reservoRestaurantData.min_booking);
 	peopleCountField.setAttribute("value", "4");
-	
-	// 
+
+	//
 	var weekday=new Array(7);
 	weekday[0]="søndag";
 	weekday[1]="mandag";
@@ -89,32 +89,32 @@ var containerSection = document.getElementById("reservo-container");
 	weekday[4]="torsdag";
 	weekday[5]="fredag";
 	weekday[6]="lørdag";
-	
+
 	var date = new Date();
 	var today = date.getDay();
-	
+
 	var datePicker = document.createElement("select");
 	for (i = 0; i < 14; i++)
 	{
 		var thisDay = today+i;
-		
+
 		while (thisDay > 6)
 			thisDay -= 7;
-			
+
 		var option = document.createElement("option");
 		option.value = i;
 		if (i > 6)
 			option.innerHTML = "Neste ";
 		option.innerHTML += weekday[thisDay];
-		
+
 		if (i == 0)
 			option.innerHTML = "i dag";
 		if (i == 1)
 			option.innerHTML = "i morgen";
-		
+
 		datePicker.appendChild(option);
 	}
-	
+
 	var timePicker = document.createElement("select");
 	// for (time in availabletimes)
 	for (i = 0; i < 24*4; i++)
@@ -122,7 +122,7 @@ var containerSection = document.getElementById("reservo-container");
 		var time = i*15;
 		var hour = parseInt(time/60);
 		var minute = time-hour*60;
-		
+
 		var option = document.createElement("option");
 		option.value = i;
 		if (minute < 10)
@@ -130,21 +130,21 @@ var containerSection = document.getElementById("reservo-container");
 		if (hour < 10)
 			hour = '0'+hour;
 		option.innerHTML = hour + ':' + minute;
-		
+
 		if (i == 24*3)
 			option.setAttribute("selected", "selected");
-		
+
 		timePicker.appendChild(option);
 	}
-	
+
 	var phoneField = document.createElement("input");
 	phoneField.type = "tel";
 	phoneField.setAttribute("placeholder", "12345678");
-	
+
 	var continueButton = document.createElement("button");
 	continueButton.innerHTML = "continue";
 	continueButton.setAttribute("onClick", "findAvailableStations();");
-	
+
 	// We need a montage!
 	inputSection.innerHTML += "Jeg, ";
 	inputSection.appendChild(nameField);
@@ -158,7 +158,7 @@ var containerSection = document.getElementById("reservo-container");
 	inputSection.appendChild(phoneField);
 	inputSection.innerHTML += " (mobil).<br>";
 	inputSection.appendChild(continueButton);
-	
+
 	containerSection.appendChild(inputSection);
 }
 
@@ -172,19 +172,19 @@ function addStationElementsToDOM()
 	for (var station in reservoRestaurantData.stations)
 	{
 		var stationObject = reservoRestaurantData.stations[station];
-		
+
 		var stationElement = document.createElement("li");
-		
+
 		var stationImageWrapper = document.createElement("figure");
 		stationImageWrapper.className = "reservoFloatLeft";
 		stationImageWrapper.id = "station"+stationObject.id;
 		stationImageWrapper.setAttribute('onclick', "selectStation("+stationObject.id+");");
-		
+
 		var stationImage = new Image();
 		stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
 		stationImageWrapper.appendChild(stationImage);
 		stationElement.appendChild(stationImageWrapper);
-		
+
   	document.getElementById("reservo-bordvalg").appendChild(stationElement);
 	}
 }
@@ -193,11 +193,14 @@ function animateInputFieldsOut()
 {
 	var inputSection = document.getElementById("reservo-brev");
 	var stationSection = document.getElementById("reservo-bordvalg");
+	var containerSection = document.getElementById("reservo-container");
 
 	// Animate instead of hidden here
 	inputSection.className = inputSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
 	stationSection.className += " reservo-active";
-	
+	containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-brev-active(?!\S)/g , '');
+	containerSection.className += " reservo-bordvalg-active";
+
 //	addStationElementsToDOM();
 }
 
