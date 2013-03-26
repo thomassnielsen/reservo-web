@@ -188,9 +188,11 @@ function addStationElementsToDOM()
 function animateInputFieldsOut()
 {
 	var inputSection = document.getElementById("reservo-brev");
+	var stationSection = document.getElementById("");
 
 	// Animate instead of hidden here
 	inputSection.style.display = "none";
+	
 	
 	addStationElementsToDOM();
 }
