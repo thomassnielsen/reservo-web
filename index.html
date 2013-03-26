@@ -23,8 +23,8 @@
     </header>
     <section id="reservo-brev" class="reservo-seksjon reservo-brev reservo-active">
       <fieldset>
-        <p>Jeg, <input type="text" placeholder="Jan Petter" /> ønsker å reservere et bord for <input type="number" max="24" min="1" value="3"/> personer på Sumo
-        <select name="dag">
+        <p>Jeg, <input type="text" id="reservo-navn" placeholder="Jan Petter" /> ønsker å reservere et bord for <input id="reservo-person-antall" type="number" max="24" min="1" value="3"/> personer på Sumo
+        <select id="reservo-dato" name="dag">
           <option>i dag</option>
           <option selected>i morgen</option>
           <option>onsdag</option>
@@ -38,7 +38,7 @@
           <option>neste fredag</option>
           <option>neste lørdag</option>
           <option>neste søndag</option>
-        </select> klokken <select name="tidspunkt">
+        </select> klokken <select id="reservo-tidspunkt" name="tidspunkt">
           <option disabled>10:00</option>
           <option disabled>– – – –</option>
           <option disabled>12:45</option>
@@ -78,7 +78,7 @@
           <option disabled>– – – –</option>
           <option disabled>23:00</option>
         </select>.</p>
-        <p>Dere kan nå meg på <input type="tel" placeholder="12345678" />(mobil).</p>
+        <p>Dere kan nå meg på <input id="reservo-phone" type="tel" placeholder="12345678" />(mobil).</p>
       </fieldset>
       <a class="reservo-button" href="#" onclick="findAvailableStations();">Gå videre</a>
     </section>
@@ -89,7 +89,7 @@
       <aside class="reservo-sammendrag">
         <fieldset>
           <p>Bord for 2 personer den 3. feb klokken 14:00.</p>
-          <a href="#">Redigér</a>
+          <a onclick="backToInputFields();">Redigér</a>
         </fieldset>
         <a class="reservo-button" href="#">Fullfør</a>
       </aside>
