@@ -1,6 +1,7 @@
 var reservoRestaurantData;
 
-function loadRestaurant(id)
+/* Load data */
+function loadRestaurant(id, renderInput)
 {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange=function()
@@ -8,7 +9,8 @@ function loadRestaurant(id)
 	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
 	    {
 		    parseRestaurantJSON(xmlhttp.responseText);
-		    createInputFields();
+		    if (renderInput)
+			    createInputFields();
 	    }
 	  }
 	xmlhttp.open("POST","http://pido.cc/api_open/get_restaurant_by_id",true);
@@ -16,8 +18,18 @@ function loadRestaurant(id)
 	xmlhttp.send("id="+id);
 }
 
+function parseRestaurantJSON(data)
+{
+	var parsedData = JSON.parse(data);
+	reservoRestaurantData = parsedData;
+}
+
+/* Render page */
 function createInputFields()
 {
+	if (document.getElementById("reservoInput")) 
+		return; // No need to create it twice
+
 	var inputSection = document.createElement("section");
 	inputSection.id = "reservoInput";
 	
@@ -110,14 +122,6 @@ function createInputFields()
 	document.body.appendChild(inputSection);
 }
 
-function parseRestaurantJSON(data)
-{
-	var parsedData = JSON.parse(data);
-	reservoRestaurantData = parsedData;
-	
-//	addStationElementsToDOM();
-}
-
 function addStationElementsToDOM()
 {
 	for (var station in reservoRestaurantData.stations)
@@ -135,6 +139,18 @@ function addStationElementsToDOM()
 		
 		document.body.appendChild(stationElement);
 	}
+}
+
+/* Button / Control functions */
+function loadReservoWithRestaurant(id)
+{
+	loadRestaurant(id, true);
+}
+
+function showAvailableStations()
+{
+	if (!reservoRestaurantData)
+		loadRestaurant(reservoRestaurantId, false)
 }
 
 function selectStation(id)
