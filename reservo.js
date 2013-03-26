@@ -224,6 +224,18 @@ function showAvailableStations()
 	reservoBooking.peopleCount = document.getElementById("reservo-person-antall").value;
 	reservoBooking.phone = document.getElementById("reservo-phone").value;
 	
+	if (reservoBooking.name.length < 2)
+	{
+		alert ("navn mangler");
+		return;
+	}
+	
+	if (reservoBooking.phone.length < 8)
+	{
+		alert("Telefonnummer mangler");
+		return;
+	}
+	
 	console.log(reservoBooking);
 
 	var inputSection = document.getElementById("reservo-brev");
