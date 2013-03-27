@@ -1,7 +1,7 @@
 var reservoRetina = window.devicePixelRatio >= 1.3;
 var reservoRestaurantData;
 var reservoBooking = new Array();
-var availableStations = new Array();
+var reservoAvailableStations = new Array();
 
 var reservoBrevBredde = 450;
 var reservoBordBredde = 600;
@@ -232,6 +232,7 @@ var containerSection = document.getElementById("reservo-container");
   continueButton.id = "reservo-continue-button";
   continueButton.className = "reservo-button";
   continueButton.innerHTML = "Fortsett";
+  continueButton.href = "javascript:void(0)";
   inputSection.appendChild(continueButton);
 
   containerSection.appendChild(inputSection);
@@ -313,6 +314,7 @@ function addStationElementsToDOM()
 	    document.getElementById("reservo-bordvalg").appendChild(divElement);
     }
 
+    reservoAvailableStations.push(stationElement);
     document.getElementById("reservo-karusell").appendChild(stationElement);
   }
   
