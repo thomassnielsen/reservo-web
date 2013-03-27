@@ -171,7 +171,7 @@ var containerSection = document.getElementById("reservo-container");
     
     var closeButton = document.createElement("a");
     closeButton.id = "reservo-overlay-lukk";
-    closeButton.setAttribute("href", "#");
+    closeButton.href = "javascript:void(0)";
     closeButton.className = "reservo-overlay-lukk";
     closeButton.innerHTML = "x";
     
@@ -258,6 +258,9 @@ function addInputHandlers()
   }, false);
   document.getElementById("reservo-tidspunkt").addEventListener("change", function(){
     timeChanged();
+  }, false);
+  document.getElementById("reservo-overlay-lukk").addEventListener("click", function(){
+  	document.getElementById("reservo-container").style.display = "none";
   }, false);
 }
 
