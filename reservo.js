@@ -1,6 +1,7 @@
 var reservoRetina = window.devicePixelRatio >= 1.3;
 var reservoRestaurantData;
-var reservoBooking = new Array;
+var reservoBooking = new Array();
+var availableStations = new Array();
 
 var reservoBrevBredde = 450;
 var reservoBordBredde = 600;
@@ -395,7 +396,7 @@ function createStationSelectionSummary()
   months[12] = "des";
     
   var pElement = document.createElement("p");
-  pElement.innerHTML = "Bord for "+reservoBooking.peopleCount + " personer den " + date.getDate() + ". " + months[date.getMonth()] + " klokken " + hour +":"+ minute + ".";
+  pElement.innerHTML = "Bord for <span>"+reservoBooking.peopleCount + " personer</span> den <span>" + date.getDate() + ". " + months[date.getMonth()] + "</span> klokken <span>" + hour +":"+ minute + "</span>.";
   
   var spanElement = document.createElement("span");
   spanElement.innerHTML = "Redigér";
