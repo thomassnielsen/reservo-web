@@ -399,8 +399,8 @@ function createStationSelectionSummary()
   pElement.innerHTML = "Bord for <span>"+reservoBooking.peopleCount + " personer</span> den <span>" + date.getDate() + ". " + months[date.getMonth()] + "</span> klokken <span>" + hour +":"+ minute + "</span>.";
   
   var spanElement = document.createElement("span");
+  spanElement.className = "reservo-rediger-markering";
   spanElement.innerHTML = "Redigér";
-  
   
   fieldsetElement.appendChild(pElement);
   fieldsetElement.appendChild(spanElement);
