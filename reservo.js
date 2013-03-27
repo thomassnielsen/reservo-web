@@ -2,6 +2,15 @@ var reservoRetina = window.devicePixelRatio >= 1.3;
 var reservoRestaurantData;
 var reservoBooking = new Array;
 
+window.onload = function()
+{
+	if (document.getElementById("reservo-container"))
+	{
+		loadRestaurant(reservoRestaurantId, false, false);
+		addInputHandlers();
+	}
+}
+
 /* Load data */
 function loadRestaurant(id, renderInput, renderStations)
 {
@@ -15,6 +24,9 @@ function loadRestaurant(id, renderInput, renderStations)
 			    createInputFields();
 			  if (renderStations)
 			    showAvailableStations();
+			    
+			  loadDays();
+			  loadHoursForDayRelativeToToday(0);
 	    }
 	  }
 	xmlhttp.open("POST","http://pido.cc/api_open/get_restaurant_by_id",true);
@@ -51,6 +63,93 @@ function parseStationJSON(data)
 	reservoRestaurantData.stations = parsedData;
 }
 
+function loadDays()
+{
+	if (!document.getElementById("reservo-dato"))
+		return; // No select box to fill with days.
+
+	var weekday=new Array(7);
+	weekday[0]="søndag";
+	weekday[1]="mandag";
+	weekday[2]="tirsdag";
+	weekday[3]="onsdag";
+	weekday[4]="torsdag";
+	weekday[5]="fredag";
+	weekday[6]="lørdag";
+	var date = new Date();
+	var today = date.getDay();
+	var datePicker = document.getElementById("reservo-dato");
+	datePicker.innerHTML = "";
+	for (i = 0; i < 14; i++)
+	{
+		var thisDay = today+i;
+
+		while (thisDay > 6)
+			thisDay -= 7;
+
+		var option = document.createElement("option");
+		option.value = i;
+		if (i > 6)
+			option.innerHTML = "Neste ";
+		option.innerHTML += weekday[thisDay];
+
+		if (i == 0)
+			option.innerHTML = "i dag";
+		if (i == 1)
+			option.innerHTML = "i morgen";
+
+		datePicker.appendChild(option);
+	}
+}
+
+function loadHoursForDayRelativeToToday(dayRelativeToToday)
+{
+	if (!document.getElementById("reservo-tidspunkt"))
+		return; // No element to fill. Go home script, you're drunk.
+		
+	date = new Date();
+	date.setDate(date.getDate()+dayRelativeToToday);
+	date.setDate(date.getDate()+1); // Mondag first damnit!
+	var selectedDay = date.getDay() + 1;
+	console.log("Setting opening hours for day "+selectedDay);
+	
+	var openingHourObject;
+	for (openingHourObjectIndex in reservoRestaurantData.opening_hours)
+	{
+		if (reservoRestaurantData.opening_hours[openingHourObjectIndex].days.indexOf(selectedDay) !== -1)
+		{
+			openingHourObject = reservoRestaurantData.opening_hours[openingHourObjectIndex];
+			break;
+		}
+	}
+	
+	var timePicker = document.getElementById("reservo-tidspunkt");
+	timePicker.innerHTML = "";
+	
+	var numberOfHours = (openingHourObject.close-openingHourObject.open)/15;
+	
+	for (i = 0; i <= numberOfHours; i++)
+	{
+		var time = parseInt(openingHourObject.open) + parseInt(i*15);
+		var option = document.createElement("option");
+		option.value = time;
+		
+		if (reservoBooking.time)
+		{
+			if (reservoBooking.time == time)
+				option.setAttribute("selected", "selected");
+		}
+		
+		var hour = parseInt(time/60);
+		var minute = time - hour*60;
+		if (minute < 10)
+			minute = "0"+minute;
+		
+		option.innerHTML = hour+":"+minute;
+		timePicker.appendChild(option);
+	}
+}
+
 /* Render page */
 function createInputFields()
 {
@@ -85,74 +184,26 @@ var containerSection = document.getElementById("reservo-container");
 
 	// Example: <input type="text" placeholder="Jan Petter">
 	var nameField = document.createElement("input");
+	nameField.id = "reservo-navn";
 	nameField.type = "text";
 	nameField.setAttribute("placeholder", "Jan Petter");
 
 	// Example: <input type="number" max="24" min="1" value="3">
 	var peopleCountField = document.createElement("input");
+	peopleCountField.id = "reservo-person-antall";
 	peopleCountField.type = "number";
 	peopleCountField.setAttribute("max", reservoRestaurantData.max_booking);
 	peopleCountField.setAttribute("min", reservoRestaurantData.min_booking);
 	peopleCountField.setAttribute("value", "4");
 
-	//
-	var weekday=new Array(7);
-	weekday[0]="søndag";
-	weekday[1]="mandag";
-	weekday[2]="tirsdag";
-	weekday[3]="onsdag";
-	weekday[4]="torsdag";
-	weekday[5]="fredag";
-	weekday[6]="lørdag";
-
-	var date = new Date();
-	var today = date.getDay();
-
 	var datePicker = document.createElement("select");
-	for (i = 0; i < 14; i++)
-	{
-		var thisDay = today+i;
-
-		while (thisDay > 6)
-			thisDay -= 7;
-
-		var option = document.createElement("option");
-		option.value = i;
-		if (i > 6)
-			option.innerHTML = "Neste ";
-		option.innerHTML += weekday[thisDay];
-
-		if (i == 0)
-			option.innerHTML = "i dag";
-		if (i == 1)
-			option.innerHTML = "i morgen";
-
-		datePicker.appendChild(option);
-	}
+	datePicker.id = "reservo-dato";
 
 	var timePicker = document.createElement("select");
-	// for (time in availabletimes)
-	for (i = 0; i < 24*4; i++)
-	{
-		var time = i*15;
-		var hour = parseInt(time/60);
-		var minute = time-hour*60;
-
-		var option = document.createElement("option");
-		option.value = i;
-		if (minute < 10)
-			minute = '0'+minute;
-		if (hour < 10)
-			hour = '0'+hour;
-		option.innerHTML = hour + ':' + minute;
-
-		if (i == 24*3)
-			option.setAttribute("selected", "selected");
-
-		timePicker.appendChild(option);
-	}
+	timePicker.id = "reservo-tidspunkt";
 
 	var phoneField = document.createElement("input");
+	phoneField.id = "reservo-phone";
 	phoneField.type = "tel";
 	phoneField.setAttribute("placeholder", "12345678");
 	
@@ -172,9 +223,9 @@ var containerSection = document.getElementById("reservo-container");
 	inputSection.appendChild(inputSectionWrapper);
 	
 	var continueButton = document.createElement("a");
+	continueButton.id = "reservo-continue-button";
 	continueButton.className = "reservo-button";
 	continueButton.innerHTML = "Fortsett";
-	continueButton.setAttribute("onClick", "findAvailableStations();");
 	inputSection.appendChild(continueButton);
 
 	containerSection.appendChild(inputSection);
@@ -183,6 +234,24 @@ var containerSection = document.getElementById("reservo-container");
 	stationSection.id = "reservo-bordvalg";
 	stationSection.className = "reservo-seksjon reservo-bordvalg";
 	containerSection.appendChild(stationSection);
+	
+	addInputHandlers();
+	
+	loadDays();
+	loadHoursForDayRelativeToToday(0);
+}
+
+function addInputHandlers()
+{
+	document.getElementById("reservo-continue-button").addEventListener("click", function(){
+		findAvailableStations();
+	}, false);
+	document.getElementById("reservo-dato").addEventListener("change", function(){
+		dateChanged();
+	}, false);
+	document.getElementById("reservo-tidspunkt").addEventListener("change", function(){
+		timeChanged();
+	}, false);
 }
 
 function addStationElementsToDOM()
@@ -192,14 +261,21 @@ function addStationElementsToDOM()
 		loadAvailableStationsForPlaceTimeAndPeople(5, 1364302096, 6, true);
 		return;
 	}
+	var first = true;
 	for (var station in reservoRestaurantData.stations)
 	{
 		var stationObject = reservoRestaurantData.stations[station];
 
 		var stationElement = document.createElement("li");
+		
+		if (first == true)
+		{
+			stationElement.className = "reservo-bord-anbefalt ";
+			first = false;
+		}
 
 		var stationImageWrapper = document.createElement("figure");
-		stationImageWrapper.className = "reservoFloatLeft";
+		stationImageWrapper.className += "reservoFloatLeft";
 		stationImageWrapper.id = "station"+stationObject.id;
 		stationImageWrapper.setAttribute('onclick', "selectStation("+stationObject.id+");");
 
@@ -212,10 +288,55 @@ function addStationElementsToDOM()
 		stationImageWrapper.appendChild(stationImage);
 		stationElement.appendChild(stationImageWrapper);
 
-  	document.getElementById("reservo-bordvalg").appendChild(stationElement);
+  	document.getElementById("reservo-karusell").appendChild(stationElement);
 	}
+	
+	var timer = null;
+	document.getElementById("reservo-karusell-wrapper").addEventListener("scroll", function(){
+		var wrapper = document.getElementById("reservo-karusell-wrapper");
+		if(timer !== null) {
+        clearTimeout(timer);        
+    }
+    timer = setTimeout(function() {
+          console.log("Stopped at "+wrapper.scrollLeft);
+          console.log("Stopped at "+wrapper.style.left);
+          
+          var target;
+          if (wrapper.scrollLeft % 300 < 150)
+	           target = wrapper.scrollLeft - (wrapper.scrollLeft % 300);
+	        else
+		         target = wrapper.scrollLeft + 300-(wrapper.scrollLeft % 300);
+		        
+		      var intervalValue = (target - wrapper.scrollLeft)/(200/20);
+		        
+		      var timer = setInterval(function(){
+		      	if (wrapper.scrollLeft < target)
+				      wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
+				    else
+				    	wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
+		      }, 20);
+		      timeout = setTimeout(function(){
+			      clearInterval(timer);
+			      wrapper.scrollLeft = target;
+		      }, 200);
+    }, 150);
+	}, false);
 }
 
+/* Input handlers */
+function dateChanged()
+{
+	var datePicker = document.getElementById("reservo-dato");
+	
+	loadHoursForDayRelativeToToday(datePicker.value);
+}
+
+function timeChanged()
+{
+	reservoBooking.time = document.getElementById("reservo-tidspunkt").value;
+}
+
+/* Navigation */
 function showAvailableStations()
 {
 	reservoBooking.name = document.getElementById("reservo-navn").value;
@@ -224,6 +345,7 @@ function showAvailableStations()
 	reservoBooking.peopleCount = document.getElementById("reservo-person-antall").value;
 	reservoBooking.phone = document.getElementById("reservo-phone").value;
 	
+	/* Temp disabled
 	if (reservoBooking.name.length < 2)
 	{
 		alert ("navn mangler");
@@ -235,6 +357,7 @@ function showAvailableStations()
 		alert("Telefonnummer mangler");
 		return;
 	}
+	*/
 	
 	console.log(reservoBooking);
 

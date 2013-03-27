@@ -25,20 +25,23 @@
       <fieldset>
         <p>Jeg, <input type="text" id="reservo-navn" placeholder="Jan Petter" /> ønsker å reservere et bord for <input id="reservo-person-antall" type="number" max="24" min="1" value="3"/> personer på Sumo
         <select id="reservo-dato" name="dag">
-          <option>i dag</option>
-          <option selected>i morgen</option>
-          <option>onsdag</option>
-          <option>torsdag</option>
-          <option>fredag</option>
-          <option>lørdag</option>
-          <option>søndag</option>
-          <option>neste mandag</option>
-          <option>neste tirsdag</option>
-          <option>neste onsdag</option>
-          <option>neste fredag</option>
-          <option>neste lørdag</option>
-          <option>neste søndag</option>
+	        <!--
+          <option value="0">i dag</option>
+          <option value="1" selected>i morgen</option>
+          <option value="2">onsdag</option>
+          <option value="3">torsdag</option>
+          <option value="4">fredag</option>
+          <option value="5">lørdag</option>
+          <option value="6">søndag</option>
+          <option value="7">neste mandag</option>
+          <option value="8">neste tirsdag</option>
+          <option value="9">neste onsdag</option>
+          <option value="10">neste fredag</option>
+          <option value="11">neste lørdag</option>
+          <option value="12">neste søndag</option>
+          -->
         </select> klokken <select id="reservo-tidspunkt" name="tidspunkt">
+        	<!--
           <option disabled>10:00</option>
           <option disabled>– – – –</option>
           <option disabled>12:45</option>
@@ -77,20 +80,17 @@
           <option disabled>21:00</option>
           <option disabled>– – – –</option>
           <option disabled>23:00</option>
+          -->
         </select>.</p>
         <p>Dere kan nå meg på <input id="reservo-phone" type="tel" placeholder="12345678" />(mobil).</p>
       </fieldset>
-      <a class="reservo-button" href="#" onclick="findAvailableStations();">Gå videre</a>
+      <a id="reservo-continue-button" class="reservo-button">Gå videre</a>
     </section>
     <section id="reservo-bordvalg" class="reservo-seksjon reservo-bordvalg">
       <div class="reservo-bord">
         <a class="reservo-forrige-bord" href="#"><</a>
         <div class="reservo-karusell-wrapper" id="reservo-karusell-wrapper">
-          <ul>
-            <li class="reservo-bord-anbefalt"><img src="http://placekitten.com/g/230" width="230" height="230" /></li>
-            <li><img src="http://placekitten.com/g/230" width="230" height="230" /></li>
-            <li><img src="http://placekitten.com/g/230" width="230" height="230" /></li>
-            <li><img src="http://placekitten.com/g/230" width="230" height="230" /></li>
+          <ul id="reservo-karusell" class="reservo-karusell">
           </ul>
         </div>
         <a class="reservo-neste-bord" href="#">></a>

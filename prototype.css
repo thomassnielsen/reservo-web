@@ -149,9 +149,24 @@ body:after {
   margin: 0;
 }
 
-.reservo-bord li {
-  float: left;
-  list-style-type: none;
+.reservo-karusell-wrapper {
+	overflow: scroll;
+}
+
+.reservo-karusell-wrapper::-webkit-scrollbar { 
+    display: none; 
+}
+
+.reservo-karusell {
+	width: 9999px;
+	padding: 0px;
+}
+
+.reservo-karusell li {
+	margin: 10px;
+	list-style-type: none;
+	display: inline-block;
+	float: left;
 }
 
 .reservo-sammendrag {
