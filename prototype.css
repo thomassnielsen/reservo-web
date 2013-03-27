@@ -23,7 +23,7 @@ body {
   font-weight: 400;
   font-size: 16px;
   -o-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
-  -ie-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
+  -ms-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
   -webkit-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
   -moz-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
   transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
@@ -132,12 +132,38 @@ body {
 .reservo-bord {
   float: left;
   width: 300px;
-  padding: 0;
-  margin: 0;
+  padding: 50px 10px 10px;
+  margin: 0 54px;
+  position: relative;
+  border: 1px solid hsl(0,0%,80%);
+  border-radius: 5px;
+}
+
+.reservo-forrige-bord, .reservo-neste-bord {
+  position: absolute;
+  top: 50%;
+  margin-top: -22px;
+  width: 44px;
+  height: 44px;
+  background-color: cornflowerblue;
+  text-align: center;
+  text-decoration: none;
+  line-height: 44px;
+  border-radius: 5px;
+}
+
+.reservo-forrige-bord {
+  left: -54px;
+}
+
+.reservo-neste-bord {
+  right: -54px;
 }
 
 .reservo-karusell-wrapper {
 	overflow: scroll;
+  width: 280px;
+  height: 280px;
 }
 
 .reservo-karusell-wrapper::-webkit-scrollbar {
@@ -146,7 +172,8 @@ body {
 
 .reservo-karusell {
 	width: 9999px;
-	padding: 0px;
+	padding: 0;
+  margin: 0;
 }
 
 .reservo-karusell li {
