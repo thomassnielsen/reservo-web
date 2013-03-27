@@ -280,6 +280,7 @@ function addStationElementsToDOM()
     
     if (first == true)
     {
+    	reservoBooking.station = stationObject.id;
       stationElement.className = "reservo-bord-anbefalt ";
       first = false;
     }
@@ -327,10 +328,7 @@ function addStationElementsToDOM()
     if(timer !== null) {
         clearTimeout(timer);        
     }
-    timer = setTimeout(function() {
-          console.log("Stopped at "+wrapper.scrollLeft);
-          console.log("Stopped at "+wrapper.style.left);
-          
+    timer = setTimeout(function() {          
           var target;
           if (wrapper.scrollLeft % 300 < 150)
              target = wrapper.scrollLeft - (wrapper.scrollLeft % 300);
@@ -348,6 +346,19 @@ function addStationElementsToDOM()
           timeout = setTimeout(function(){
             clearInterval(timer);
             wrapper.scrollLeft = target;
+            // Set selected station
+
+            for (var stationElementIndex in reservoAvailableStations)
+            {
+	           	var stationElement = reservoAvailableStations[stationElementIndex];
+	           	var newOffset = stationElement.offsetLeft - document.getElementById("reservo-karusell").getElementsByTagName("li")[0].offsetLeft;
+	           	if (newOffset == target)
+	           	{
+	           		stationId = stationElement.getElementsByTagName("figure")[0].id.replace("station", "");
+		            reservoBooking.station = stationId;
+		            console.log(reservoBooking);
+		          }
+            }
           }, 200);
     }, 150);
   }, false);
