@@ -4,7 +4,7 @@ var reservoBooking = new Array();
 var reservoAvailableStations = new Array();
 
 var reservoBrevBredde = 450;
-var reservoBordBredde = 600;
+var reservoBordBredde = 660;
 
 window.onload = function()
 {
