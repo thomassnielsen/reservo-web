@@ -17,17 +17,28 @@ body:after {
 
 .reservo-container {
   position: absolute;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
   left: 50%;
   top: 50%;
   height: 420px;
+  width: 450px;
+  margin-left: -225px;
   margin-top: -210px;
   background-color: hsl(0,0%,95%);
+  -webkit-box-shadow: 0 10px 50px rgba(0, 0, 0, 0.75);
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.75);
   z-index: 900;
   font-family: "open-sans", sans-serif;
   font-weight: 400;
   font-size: 16px;
+  -webkit-transition:width 1s, height 1s, margin-left 1s, margin-top 1s;
+  -moz-transition:width 1s, height 1s, margin-left 1s, margin-top 1s;
+  -o-transition:width 1s, height 1s, margin-left 1s, margin-top 1s;
+  -ms-transition:width 1s, height 1s, margin-left 1s, margin-top 1s;
+  transition:width 1s, height 1s, margin-left 1s, margin-top 1s;
 }
 
 .reservo-container * {
@@ -36,16 +47,6 @@ body:after {
 
 .reservo-seksjon {
   margin: 20px;
-}
-
-.reservo-container.reservo-brev-active {
-  width: 450px;
-  margin-left: -225px;
-}
-
-.reservo-container.reservo-bordvalg-active {
-  width: 600px;
-  margin-left: -300px;
 }
 
 .reservo-seksjon.reservo-active {
@@ -183,9 +184,7 @@ body:after {
 }
 
 .reservo-sammendrag fieldset span {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  display: inline-block;
   height: 20px;
   font-size: 8px;
   line-height: 20px;
