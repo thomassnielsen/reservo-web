@@ -2,6 +2,9 @@ var reservoRetina = window.devicePixelRatio >= 1.3;
 var reservoRestaurantData;
 var reservoBooking = new Array;
 
+var reservoBrevBredde = 450;
+var reservoBordBredde = 600;
+
 window.onload = function()
 {
   if (document.getElementById("reservo-container"))
@@ -290,15 +293,6 @@ function addStationElementsToDOM()
     stationImageWrapper.appendChild(stationImage);
     stationElement.appendChild(stationImageWrapper);
 
-/*
-<div class="reservo-karusell-wrapper" id="reservo-karusell-wrapper">
-          <ul id="reservo-karusell" class="reservo-karusell">
-          </ul>
-        </div>
-        <a class="reservo-neste-bord" href="#">&rarr;</a>
-      </div>
-*/
-
     if (!document.getElementById("reservo-bord"))
     {
     	divElement = document.createElement("div");
@@ -458,6 +452,9 @@ function showAvailableStations()
   stationSection.className += " reservo-active";
   containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-brev-active(?!\S)/g , '');
   containerSection.className += " reservo-bordvalg-active";
+  
+  containerSection.style.width = reservoBordBredde+"px";
+  containerSection.style.marginLeft = "-"+(reservoBordBredde/2)+"px";
 
   addStationElementsToDOM();
   createStationSelectionSummary();
@@ -475,6 +472,9 @@ function backToInputFields()
   stationSection.className = stationSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
   containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-bordvalg-active(?!\S)/g , '');
   containerSection.className += " reservo-brev-active";
+  
+  containerSection.style.width = reservoBrevBredde+"px";
+  containerSection.style.marginLeft = "-"+(reservoBrevBredde/2)+"px";
 }
 
 /* Button / Control functions */
