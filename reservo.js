@@ -28,7 +28,7 @@ function loadRestaurant(id, renderInput, renderStations)
           createInputFields();
         if (renderStations)
           showAvailableStations();
-          
+
         loadDays();
         loadHoursForDayRelativeToToday(0);
       }
@@ -110,13 +110,13 @@ function loadHoursForDayRelativeToToday(dayRelativeToToday)
 {
   if (!document.getElementById("reservo-tidspunkt"))
     return; // No element to fill. Go home script, you're drunk.
-    
+
   date = new Date();
   date.setDate(date.getDate()+dayRelativeToToday);
   date.setDate(date.getDate()+1); // Mondag first damnit!
   var selectedDay = date.getDay() + 1; // 1-7 instead of 0-6
   console.log("Setting opening hours for day "+selectedDay);
-  
+
   var openingHourObject;
   for (var openingHourObjectIndex in reservoRestaurantData.opening_hours)
   {
@@ -126,31 +126,31 @@ function loadHoursForDayRelativeToToday(dayRelativeToToday)
       break;
     }
   }
-  
+
   var timePicker = document.getElementById("reservo-tidspunkt");
   timePicker.innerHTML = "";
-  
+
   var numberOfHours = (openingHourObject.close-openingHourObject.open)/15;
-  
+
   for (i = 0; i <= numberOfHours; i++)
   {
     var time = parseInt(openingHourObject.open) + parseInt(i*15);
     var option = document.createElement("option");
     option.value = time;
-    
+
     if (reservoBooking.time)
     {
       if (reservoBooking.time == time)
         option.setAttribute("selected", "selected");
     }
-    
+
     var hour = parseInt(time/60);
     if (hour < 10)
       hour = "0"+hour;
     var minute = time - hour*60;
     if (minute < 10)
       minute = "0"+minute;
-    
+
     option.innerHTML = hour+":"+minute;
     timePicker.appendChild(option);
   }
@@ -165,19 +165,19 @@ var containerSection = document.getElementById("reservo-container");
     containerSection = document.createElement("section");
     containerSection.id = "reservo-container";
     containerSection.className = "reservo-container";
-    
+
     var header = document.createElement("header");
     header.innerHTML = "<h1>Min reservasjon</h1>";
-    
+
     var closeButton = document.createElement("a");
     closeButton.id = "reservo-overlay-lukk";
     closeButton.href = "javascript:void(0)";
     closeButton.className = "reservo-overlay-lukk";
     closeButton.innerHTML = "x";
-    
+
     // We need a montage!
     header.appendChild(closeButton);
-    containerSection.appendChild(header);   
+    containerSection.appendChild(header);
     document.body.appendChild(containerSection);
   }
 
@@ -212,7 +212,7 @@ var containerSection = document.getElementById("reservo-container");
   phoneField.id = "reservo-phone";
   phoneField.type = "tel";
   phoneField.setAttribute("placeholder", "12345678");
-  
+
   // Yeah a fucking montage!
   var inputSectionWrapper = document.createElement("fieldset");
   inputSectionWrapper.innerHTML += "Jeg, ";
@@ -227,7 +227,7 @@ var containerSection = document.getElementById("reservo-container");
   inputSectionWrapper.appendChild(phoneField);
   inputSectionWrapper.innerHTML += " (mobil).<br>";
   inputSection.appendChild(inputSectionWrapper);
-  
+
   var continueButton = document.createElement("a");
   continueButton.id = "reservo-continue-button";
   continueButton.className = "reservo-button";
@@ -236,14 +236,14 @@ var containerSection = document.getElementById("reservo-container");
   inputSection.appendChild(continueButton);
 
   containerSection.appendChild(inputSection);
-  
+
   var stationSection = document.createElement("section");
   stationSection.id = "reservo-bordvalg";
   stationSection.className = "reservo-seksjon reservo-bordvalg";
   containerSection.appendChild(stationSection);
-  
+
   addInputHandlers();
-  
+
   loadDays();
   loadHoursForDayRelativeToToday(0);
 }
@@ -277,7 +277,7 @@ function addStationElementsToDOM()
     var stationObject = reservoRestaurantData.stations[station];
 
     var stationElement = document.createElement("li");
-    
+
     if (first == true)
     {
     	reservoBooking.station = stationObject.id;
@@ -294,8 +294,8 @@ function addStationElementsToDOM()
     stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
     if (reservoRetina)
       stationImage.src = stationImage.src.replace('.jpg', '@2x.jpg');
-    stationImage.style.width = "280px";
-    stationImage.style.height = "280px";
+    stationImage.height = "280";
+    stationImage.width = "280";
     stationImageWrapper.appendChild(stationImage);
     stationElement.appendChild(stationImageWrapper);
 
@@ -304,15 +304,15 @@ function addStationElementsToDOM()
     	divElement = document.createElement("div");
     	divElement.id = "reservo-bord";
     	divElement.className = "reservo-bord";
-    
+
 	    wrapperElement = document.createElement("div");
 	    wrapperElement.id = "reservo-karusell-wrapper";
 	    wrapperElement.className = "reservo-karusell-wrapper";
-	    
+
 	    ulElement = document.createElement("ul");
 	    ulElement.id = "reservo-karusell";
 	    ulElement.className = "reservo-karusell";
-	    
+
 	    wrapperElement.appendChild(ulElement);
 	    divElement.appendChild(wrapperElement);
 	    document.getElementById("reservo-bordvalg").appendChild(divElement);
@@ -321,22 +321,22 @@ function addStationElementsToDOM()
     reservoAvailableStations.push(stationElement);
     document.getElementById("reservo-karusell").appendChild(stationElement);
   }
-  
+
   var timer = null;
   document.getElementById("reservo-karusell-wrapper").addEventListener("scroll", function(){
     var wrapper = document.getElementById("reservo-karusell-wrapper");
     if(timer !== null) {
-        clearTimeout(timer);        
+        clearTimeout(timer);
     }
-    timer = setTimeout(function() {          
+    timer = setTimeout(function() {
           var target;
           if (wrapper.scrollLeft % 300 < 150)
              target = wrapper.scrollLeft - (wrapper.scrollLeft % 300);
           else
              target = wrapper.scrollLeft + 300-(wrapper.scrollLeft % 300);
-            
+
           var intervalValue = (target - wrapper.scrollLeft)/(200/20);
-            
+
           var timer = setInterval(function(){
             if (wrapper.scrollLeft < target)
               wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
@@ -375,28 +375,28 @@ function createStationSelectionSummary()
   }
 
   var summaryElement = document.getElementById("reservo-sammendrag");
-  
-  
+
+
   var fieldsetElement = summaryElement.getElementsByTagName("fieldset")[0];
   if (!fieldsetElement)
   {
     fieldsetElement = document.createElement("fieldset");
     summaryElement.appendChild(fieldsetElement);
   }
-  
+
   fieldsetElement.innerHTML = "";
-    
+
   var hour = parseInt(reservoBooking.time/60);
   if (hour < 10)
     hour = "0"+hour;
-  
+
   var minute = reservoBooking.time-hour*60;
   if (minute < 10)
     minute = "0"+minute;
-    
+
   var date = new Date();
   date.setDate(date.getDate()+parseInt(reservoBooking.date));
-    
+
   var months = new Array();
   months[1] = "jan";
   months[2] = "feb";
@@ -410,14 +410,14 @@ function createStationSelectionSummary()
   months[10] = "okt";
   months[11] = "nov";
   months[12] = "des";
-    
+
   var pElement = document.createElement("p");
   pElement.innerHTML = "Bord for <span>"+reservoBooking.peopleCount + " personer</span> den <span>" + date.getDate() + ". " + months[date.getMonth()] + "</span> klokken <span>" + hour +":"+ minute + "</span>.";
-  
+
   var spanElement = document.createElement("span");
   spanElement.className = "reservo-rediger-markering";
   spanElement.innerHTML = "Redigér";
-  
+
   fieldsetElement.appendChild(pElement);
   fieldsetElement.appendChild(spanElement);
 }
@@ -426,7 +426,7 @@ function createStationSelectionSummary()
 function dateChanged()
 {
   var datePicker = document.getElementById("reservo-dato");
-  
+
   loadHoursForDayRelativeToToday(datePicker.value);
 }
 
@@ -443,21 +443,21 @@ function showAvailableStations()
   reservoBooking.time = document.getElementById("reservo-tidspunkt").value;
   reservoBooking.peopleCount = document.getElementById("reservo-person-antall").value;
   reservoBooking.phone = document.getElementById("reservo-phone").value;
-  
+
   /* Temp disabled
   if (reservoBooking.name.length < 2)
   {
     alert ("navn mangler");
     return;
   }
-  
+
   if (reservoBooking.phone.length < 8)
   {
     alert("Telefonnummer mangler");
     return;
   }
   */
-  
+
   console.log(reservoBooking);
 
   var inputSection = document.getElementById("reservo-brev");
@@ -469,7 +469,7 @@ function showAvailableStations()
   stationSection.className += " reservo-active";
   containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-brev-active(?!\S)/g , '');
   containerSection.className += " reservo-bordvalg-active";
-  
+
   containerSection.style.width = reservoBordBredde+"px";
   containerSection.style.marginLeft = "-"+(reservoBordBredde/2)+"px";
 
@@ -480,16 +480,16 @@ function showAvailableStations()
 function backToInputFields()
 {
   reservoRestaurantData.station = null;
-  
+
   var inputSection = document.getElementById("reservo-brev");
   var stationSection = document.getElementById("reservo-bordvalg");
   var containerSection = document.getElementById("reservo-container");
-  
+
   inputSection.className  += " reservo-active";
   stationSection.className = stationSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
   containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-bordvalg-active(?!\S)/g , '');
   containerSection.className += " reservo-brev-active";
-  
+
   containerSection.style.width = reservoBrevBredde+"px";
   containerSection.style.marginLeft = "-"+(reservoBrevBredde/2)+"px";
 }
