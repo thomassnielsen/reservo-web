@@ -171,6 +171,11 @@ body:after {
 .reservo-sammendrag {
   float: right;
   width: 30%;
+  text-align: center;
+}
+
+.reservo-sammendrag .reservo-button {
+  width: 100%;
 }
 
 .reservo-sammendrag fieldset {
@@ -180,6 +185,7 @@ body:after {
   padding: 10px;
   padding-bottom: 30px;
   line-height: 2;
+  text-align: left;
 }
 
 .reservo-sammendrag fieldset p {
@@ -197,6 +203,7 @@ body:after {
   color: hsl(0,0%,50%);
   letter-spacing: .1em;
   text-transform: uppercase;
+  -webkit-transition: color 0.1s, background-color 0.1s;
 }
 
 .reservo-sammendrag fieldset .reservo-rediger-markering {
