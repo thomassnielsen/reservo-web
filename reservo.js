@@ -2,9 +2,11 @@ var reservoRetina = window.devicePixelRatio >= 1.3;
 var reservoRestaurantData;
 var reservoBooking = new Array();
 var reservoAvailableStations = new Array();
+var reservoBoolAutoscrolling = false;
 
 var reservoBrevBredde = 450;
 var reservoBordBredde = 660;
+
 
 window.onload = function()
 {
@@ -260,7 +262,7 @@ function addInputHandlers()
     timeChanged();
   }, false);
   document.getElementById("reservo-overlay-lukk").addEventListener("click", function(){
-  	document.getElementById("reservo-container").style.display = "none";
+    document.getElementById("reservo-container").parentNode.removeChild(document.getElementById("reservo-container"));
   }, false);
 }
 
@@ -271,24 +273,21 @@ function addStationElementsToDOM()
     loadAvailableStationsForPlaceTimeAndPeople(5, 1364302096, 6, true);
     return;
   }
+  
   var first = true;
   for (var station in reservoRestaurantData.stations)
   {
     var stationObject = reservoRestaurantData.stations[station];
 
     var stationElement = document.createElement("li");
+    stationElement.id = "station"+stationObject.id;
 
     if (first == true)
     {
-    	reservoBooking.station = stationObject.id;
+      reservoBooking.station = stationObject.id;
       stationElement.className = "reservo-bord-anbefalt ";
       first = false;
     }
-
-    var stationImageWrapper = document.createElement("figure");
-    stationImageWrapper.className += "reservoFloatLeft";
-    stationImageWrapper.id = "station"+stationObject.id;
-    stationImageWrapper.setAttribute('onclick', "selectStation("+stationObject.id+");");
 
     var stationImage = new Image();
     stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
@@ -296,35 +295,65 @@ function addStationElementsToDOM()
       stationImage.src = stationImage.src.replace('.jpg', '@2x.jpg');
     stationImage.height = "280";
     stationImage.width = "280";
-    stationImageWrapper.appendChild(stationImage);
-    stationElement.appendChild(stationImageWrapper);
+    stationElement.appendChild(stationImage);
 
     if (!document.getElementById("reservo-bord"))
     {
-    	divElement = document.createElement("div");
-    	divElement.id = "reservo-bord";
-    	divElement.className = "reservo-bord";
+      divElement = document.createElement("div");
+      divElement.id = "reservo-bord";
+      divElement.className = "reservo-bord";
 
-	    wrapperElement = document.createElement("div");
-	    wrapperElement.id = "reservo-karusell-wrapper";
-	    wrapperElement.className = "reservo-karusell-wrapper";
+      var prevArrow = document.createElement("a");
+      prevArrow.id = "reservo-forrige-bord";
+      prevArrow.className = "reservo-forrige-bord";
+      prevArrow.href = "javascript:void(0)";
+      prevArrow.innerHTML = "⟨";
+      divElement.appendChild(prevArrow);
 
-	    ulElement = document.createElement("ul");
-	    ulElement.id = "reservo-karusell";
-	    ulElement.className = "reservo-karusell";
+      wrapperElement = document.createElement("div");
+      wrapperElement.id = "reservo-karusell-wrapper";
+      wrapperElement.className = "reservo-karusell-wrapper";
 
-	    wrapperElement.appendChild(ulElement);
-	    divElement.appendChild(wrapperElement);
-	    document.getElementById("reservo-bordvalg").appendChild(divElement);
+      ulElement = document.createElement("ul");
+      ulElement.id = "reservo-karusell";
+      ulElement.className = "reservo-karusell";
+
+      wrapperElement.appendChild(ulElement);
+      divElement.appendChild(wrapperElement);
+      
+      var nextArrow = document.createElement("a");
+      nextArrow.id = "reservo-neste-bord";
+      nextArrow.className = "reservo-neste-bord";
+      nextArrow.href = "javascript:void(0)";
+      nextArrow.innerHTML = "⟩";
+      divElement.appendChild(nextArrow);
+      
+      document.getElementById("reservo-bordvalg").appendChild(divElement);
     }
 
     reservoAvailableStations.push(stationElement);
     document.getElementById("reservo-karusell").appendChild(stationElement);
   }
+  
+  document.getElementById("reservo-forrige-bord").addEventListener("click", function(){
+    selectPrevStation();
+  });
+  
+  document.getElementById("reservo-neste-bord").addEventListener("click", function(){
+    selectNextStation();
+  });
+
+  document.getElementById("reservo-karusell").style.width = (300*reservoAvailableStations.length-20)+"px"; // -20 because the wrapper is 280, not 300
 
   var timer = null;
   document.getElementById("reservo-karusell-wrapper").addEventListener("scroll", function(){
     var wrapper = document.getElementById("reservo-karusell-wrapper");
+    if (wrapper.scrollLeft > (parseInt(document.getElementById("reservo-karusell").style.width) - 300))
+      return;
+  
+    if (reservoBoolAutoscrolling)
+      return;
+    
     if(timer !== null) {
         clearTimeout(timer);
     }
@@ -335,14 +364,8 @@ function addStationElementsToDOM()
           else
              target = wrapper.scrollLeft + 300-(wrapper.scrollLeft % 300);
 
-          var intervalValue = (target - wrapper.scrollLeft)/(200/20);
-
-          var timer = setInterval(function(){
-            if (wrapper.scrollLeft < target)
-              wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
-            else
-              wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
-          }, 20);
+          scrollStationPickerTo(target);
+             
           timeout = setTimeout(function(){
             clearInterval(timer);
             wrapper.scrollLeft = target;
@@ -350,14 +373,14 @@ function addStationElementsToDOM()
 
             for (var stationElementIndex in reservoAvailableStations)
             {
-	           	var stationElement = reservoAvailableStations[stationElementIndex];
-	           	var newOffset = stationElement.offsetLeft - document.getElementById("reservo-karusell").getElementsByTagName("li")[0].offsetLeft;
-	           	if (newOffset == target)
-	           	{
-	           		stationId = stationElement.getElementsByTagName("figure")[0].id.replace("station", "");
-		            reservoBooking.station = stationId;
-		            console.log(reservoBooking);
-		          }
+              var stationElement = reservoAvailableStations[stationElementIndex];
+              var newOffset = stationElement.offsetLeft - document.getElementById("reservo-karusell").getElementsByTagName("li")[0].offsetLeft;
+              if (newOffset == target)
+              {
+                stationId = stationElement.id.replace("station", "");
+                reservoBooking.station = stationId;
+                console.log(reservoBooking);
+              }
             }
           }, 200);
     }, 150);
@@ -465,10 +488,9 @@ function showAvailableStations()
   var containerSection = document.getElementById("reservo-container");
 
   // Animate instead of hidden here
-  inputSection.className = inputSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
-  stationSection.className += " reservo-active";
-  containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-brev-active(?!\S)/g , '');
-  containerSection.className += " reservo-bordvalg-active";
+  removeClassFromElement("reservo-active", inputSection);
+  setClassOnElement("reservo-active", stationSection);
+  setClassOnElement("reservo-bordvalg-active", containerSection);
 
   containerSection.style.width = reservoBordBredde+"px";
   containerSection.style.marginLeft = "-"+(reservoBordBredde/2)+"px";
@@ -485,10 +507,10 @@ function backToInputFields()
   var stationSection = document.getElementById("reservo-bordvalg");
   var containerSection = document.getElementById("reservo-container");
 
-  inputSection.className  += " reservo-active";
-  stationSection.className = stationSection.className.replace( /(?:^|\s)reservo-active(?!\S)/g , '');
-  containerSection.className = containerSection.className.replace( /(?:^|\s)reservo-bordvalg-active(?!\S)/g , '');
-  containerSection.className += " reservo-brev-active";
+  removeClassFromElement("reservo-active", stationSection);
+  setClassOnElement("reservo-active", inputSection);
+  removeClassFromElement("reservo-bordvalg-active", containerSection);
+  setClassOnElement("reservo-brev-active", containerSection);
 
   containerSection.style.width = reservoBrevBredde+"px";
   containerSection.style.marginLeft = "-"+(reservoBrevBredde/2)+"px";
@@ -508,15 +530,57 @@ function findAvailableStations()
     showAvailableStations();
 }
 
-function selectStation(id)
+function selectNextStation()
 {
-  for (var station in reservoRestaurantData.stations)
-  {
-    var stationObject = reservoRestaurantData.stations[station];
-    var stationElement = document.getElementById("station"+stationObject.id);
-    stationElement.className = stationElement.className.replace( /(?:^|\s)reservoSelectedStation(?!\S)/g , '');
-  }
+  scrollStationPickerTo(document.getElementById("reservo-karusell-wrapper").scrollLeft+300);
+}
 
-  var stationElement = document.getElementById("station"+id);
-  stationElement.className = "reservoFloatLeft reservoSelectedStation";
+function selectPrevStation()
+{
+  scrollStationPickerTo(document.getElementById("reservo-karusell-wrapper").scrollLeft-300);
+}
+
+function scrollStationPickerTo(target)
+{
+  reservoBoolAutoscrolling = true;
+  
+  var wrapper = document.getElementById("reservo-karusell-wrapper");
+  
+  var intervalValue = (target - wrapper.scrollLeft)/(200/20);
+  
+  var intervalTimer = setInterval(function(){
+    if (wrapper.scrollLeft < target)
+      wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
+    else
+      wrapper.scrollLeft = wrapper.scrollLeft + intervalValue;
+  }, 20);
+  
+  var stopTimer = setTimeout(function(){
+    clearInterval(intervalTimer);
+    wrapper.scrollLeft = target;
+    reservoBoolAutoscrolling = false;
+  }, 200);
+}
+
+/* DOM helpers */
+function removeClassFromElement(theClass, theElement)
+{
+	var removeReg = new RegExp('(\\s|^)'+theClass+'(\\s|$)');
+	theElement.className=theElement.className.replace(removeReg,'');
+}
+
+function setClassOnElement(theClass, theElement)
+{
+	removeClassFromElement(theClass, theElement); // prevents double setting
+	theElement.className += ' '+theClass;
+}
+
+/* Math and converting helpers */
+function dayFromTodayAndMinutesToTimestamp(dayFromToday, minutes)
+{
+	var date = new Date();
+  date.setDate(date.getDate()+parseInt(dayFromToday));
+  date.setUTCHours(0,minutes,0,0);
+  
+  console.log(date.getTime()/1000);
 }

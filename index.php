@@ -11,6 +11,6 @@
 </head>
 <body>
 	<script src="reservo.js"></script>
-	<button type="button" style="z-index:1000;position:absolute;" onclick="loadReservoWithRestaurant(5)">Run reservo</button>
+	<button type="button" onclick="loadReservoWithRestaurant(5)">Reserver bord</button>
 </body>
 </html>
