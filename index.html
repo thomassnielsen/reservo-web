@@ -17,10 +17,11 @@
 </head>
 <body>
   <section id="reservo-container" class="reservo-container">
-    <header>
+	  <header>
       <h1>Min reservasjon</h1>
       <a href="javascript:void(0)" id="reservo-overlay-lukk" class="reservo-overlay-lukk">x</a>
     </header>
+  	<div id="reservo-container-wrapper" class="reservo-container-wrapper">
     <section id="reservo-brev" class="reservo-seksjon reservo-brev reservo-active">
       <fieldset>
         <p>Jeg, <input type="text" id="reservo-navn" placeholder="Jan Petter" /> ønsker å reservere et bord for <input id="reservo-person-antall" type="number" max="24" min="1" value="3"/> personer på Sumo
@@ -103,6 +104,7 @@
         <a class="reservo-button" href="javascript:void(0)">Send reservasjon</a>
       </aside>
     </section>
+  	</div>
   </section>
 </body>
 </html>

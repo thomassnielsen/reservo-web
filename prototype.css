@@ -27,22 +27,20 @@ body {
   -webkit-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
   -moz-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
   transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
+  overflow: hidden;
 }
 
 .reservo-container * {
   box-sizing: border-box;
 }
 
+.reservo-container-wrapper
+{
+	width: 1200px;
+}
+
 .reservo-seksjon {
   margin: 20px;
-}
-
-.reservo-seksjon.reservo-active {
-  display:block;
-}
-
-.reservo-seksjon:not(.reservo-active) {
-  display:none;
 }
 
 .reservo-container header {
@@ -104,6 +102,21 @@ body {
 .reservo-brev {
   line-height: 2.5;
   text-align: center;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+  
+  /* Animated stuff */
+  margin-left: -430px;
+  width: 410px;
+  float: left;
+}
+
+.reservo-brev.reservo-active
+{  
+	margin-left: 20px;
+	opacity: 1.0;
 }
 
 .reservo-container fieldset {
@@ -137,6 +150,12 @@ body {
   position: relative;
   border: 1px solid hsl(0,0%,80%);
   border-radius: 5px;
+}
+  
+.reservo-bordvalg
+{
+	float: left;
+	width: 620px;
 }
 
 .reservo-forrige-bord, .reservo-neste-bord {
@@ -251,4 +270,9 @@ body {
 .reservo-sammendrag fieldset:hover span {
   background-color: hsl(0,0%,70%);
   color: hsl(0,0%,95%);
+}
+
+.reservo-invisible
+{
+	opacity: 0.0;
 }

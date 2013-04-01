@@ -166,7 +166,7 @@ var containerSection = document.getElementById("reservo-container");
   {
     containerSection = document.createElement("section");
     containerSection.id = "reservo-container";
-    containerSection.className = "reservo-container";
+    containerSection.className = "reservo-container reservo-invisible";
 
     var header = document.createElement("header");
     header.innerHTML = "<h1>Min reservasjon</h1>";
@@ -181,6 +181,9 @@ var containerSection = document.getElementById("reservo-container");
     header.appendChild(closeButton);
     containerSection.appendChild(header);
     document.body.appendChild(containerSection);
+    setTimeout(function(){ // We need some delay so we're sure that the element is present in the DOM.
+	    containerSection.className = "reservo-container";
+    }, 100);
   }
 
   if (document.getElementById("reservo-brev"))
@@ -190,13 +193,19 @@ var containerSection = document.getElementById("reservo-container");
   inputSection.id = "reservo-brev";
   inputSection.className = "reservo-seksjon reservo-brev reservo-active";
 
-  // Example: <input type="text" placeholder="Jan Petter">
+  /*
+   Create textfield for name
+   Example: <input type="text" placeholder="Jan Petter">
+   */
   var nameField = document.createElement("input");
   nameField.id = "reservo-navn";
   nameField.type = "text";
   nameField.setAttribute("placeholder", "Jan Petter");
 
-  // Example: <input type="number" max="24" min="1" value="3">
+  /*
+   Create textfield for phone number
+   Example: <input type="number" max="24" min="1" value="3">
+  */
   var peopleCountField = document.createElement("input");
   peopleCountField.id = "reservo-person-antall";
   peopleCountField.type = "number";
@@ -262,7 +271,10 @@ function addInputHandlers()
     timeChanged();
   }, false);
   document.getElementById("reservo-overlay-lukk").addEventListener("click", function(){
-    document.getElementById("reservo-container").parentNode.removeChild(document.getElementById("reservo-container"));
+  	document.getElementById("reservo-container").style.opacity = "0.0";
+  	setTimeout(function(){
+	  	document.getElementById("reservo-container").parentNode.removeChild(document.getElementById("reservo-container"));
+  	}, 1000);
   }, false);
 }
 
@@ -421,18 +433,18 @@ function createStationSelectionSummary()
   date.setDate(date.getDate()+parseInt(reservoBooking.date));
 
   var months = new Array();
-  months[1] = "jan";
-  months[2] = "feb";
-  months[3] = "mar";
-  months[4] = "apr";
-  months[5] = "mai";
-  months[6] = "jun";
-  months[7] = "jul";
-  months[8] = "aug";
-  months[9] = "sep";
-  months[10] = "okt";
-  months[11] = "nov";
-  months[12] = "des";
+  months[0] = "jan";
+  months[1] = "feb";
+  months[2] = "mar";
+  months[3] = "apr";
+  months[4] = "mai";
+  months[5] = "jun";
+  months[6] = "jul";
+  months[7] = "aug";
+  months[8] = "sep";
+  months[9] = "okt";
+  months[10] = "nov";
+  months[11] = "des";
 
   var pElement = document.createElement("p");
   pElement.innerHTML = "Bord for <span>"+reservoBooking.peopleCount + " personer</span> den <span>" + date.getDate() + ". " + months[date.getMonth()] + "</span> klokken <span>" + hour +":"+ minute + "</span>.";
