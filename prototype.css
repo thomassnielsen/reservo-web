@@ -22,11 +22,11 @@ body {
   font-family: "open-sans", sans-serif;
   font-weight: 400;
   font-size: 16px;
-  -o-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
-  -ms-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
-  -webkit-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
-  -moz-transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
-  transition: width 1s, height 1s, margin-left 1s, margin-top 1s, opacity 1s;
+  -o-transition: width 0.5s ease, height 0.5s ease, margin-left 0.5s ease, margin-top 0.5s ease, opacity 0.5s ease;
+  -ms-transition: width 0.5s ease, height 0.5s ease, margin-left 0.5s ease, margin-top 0.5s ease, opacity 0.5s ease;
+  -webkit-transition: width 0.5s ease, height 0.5s ease, margin-left 0.5s ease, margin-top 0.5s ease, opacity 0.5s ease;
+  -moz-transition: width 0.5s ease, height 0.5s ease, margin-left 0.5s ease, margin-top 0.5s ease, opacity 0.5s ease;
+  transition: width 0.5s ease, height 0.5s ease, margin-left 0.5s ease, margin-top 0.5s ease, opacity 0.5s ease;
   overflow: hidden;
 }
 
@@ -101,10 +101,10 @@ body {
 .reservo-brev {
   line-height: 2.5;
   text-align: center;
-  -webkit-transition: all 1s ease;
-  -moz-transition: all 1s ease;
-  -o-transition: all 1s ease;
-  transition: all 1s ease;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 
   /* Animated stuff */
   margin-left: -430px;
