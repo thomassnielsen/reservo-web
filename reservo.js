@@ -10,6 +10,7 @@ var reservoBordBredde = 660;
 
 window.onload = function()
 {
+	console.log("window.onload()");
   if (document.getElementById("reservo-container"))
   {
     loadRestaurant(reservoRestaurantId, false, false);
@@ -20,6 +21,7 @@ window.onload = function()
 /* Load data */
 function loadRestaurant(id, renderInput, renderStations)
 {
+	console.log("loadRestaurant()");
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange=function()
     {
@@ -40,8 +42,26 @@ function loadRestaurant(id, renderInput, renderStations)
   xmlhttp.send("id="+id);
 }
 
+function loadBusyTimesForPlaceDayAndPeople(id, day, people)
+{
+	console.log("loadBusyTimesForPlaceDayAndPeople()");
+	var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function()
+    {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+      {
+        var parsedData = JSON.parse(xmlhttp.responseText);
+        updateBusyTimes(parsedData);
+      }
+    }
+  xmlhttp.open("POST","http://pido.cc/api_open/get_busy_hours_for_day_and_place_and_people",true);
+  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  xmlhttp.send("place_id="+id+"&day="+day+"&people="+people);
+}
+
 function loadAvailableStationsForPlaceTimeAndPeople(id, time, people, renderStations)
 {
+	console.log("loadAvailableStationsForPlaceTimeAndPeople()");
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange=function()
     {
@@ -59,18 +79,21 @@ function loadAvailableStationsForPlaceTimeAndPeople(id, time, people, renderStat
 
 function parseRestaurantJSON(data)
 {
+	console.log("parseRestaurantJSON()");
   var parsedData = JSON.parse(data);
   reservoRestaurantData = parsedData;
 }
 
 function parseStationJSON(data)
 {
+	console.log("parseStationJSON()");
   var parsedData = JSON.parse(data);
   reservoRestaurantData.stations = parsedData;
 }
 
 function loadDays()
 {
+	console.log("loadDays()");
   if (!document.getElementById("reservo-dato"))
     return; // No select box to fill with days.
 
@@ -110,6 +133,7 @@ function loadDays()
 
 function loadHoursForDayRelativeToToday(dayRelativeToToday)
 {
+	console.log("loadHoursForDayRelativeToToday()");
   if (!document.getElementById("reservo-tidspunkt"))
     return; // No element to fill. Go home script, you're drunk.
 
@@ -117,7 +141,6 @@ function loadHoursForDayRelativeToToday(dayRelativeToToday)
   date.setDate(date.getDate()+dayRelativeToToday);
   date.setDate(date.getDate()+1); // Mondag first damnit!
   var selectedDay = date.getDay() + 1; // 1-7 instead of 0-6
-  console.log("Setting opening hours for day "+selectedDay);
 
   var openingHourObject;
   for (var openingHourObjectIndex in reservoRestaurantData.opening_hours)
@@ -156,12 +179,17 @@ function loadHoursForDayRelativeToToday(dayRelativeToToday)
     option.innerHTML = hour+":"+minute;
     timePicker.appendChild(option);
   }
+  
+  date = new Date();
+  date.setDate(date.getDate()+dayRelativeToToday);
+  loadBusyTimesForPlaceDayAndPeople(reservoRestaurantData.id, date.getDate(), document.getElementById("reservo-person-antall").value);
 }
 
 /* Render page */
 function createInputFields()
 {
-var containerSection = document.getElementById("reservo-container");
+	console.log("createInputFields()");
+	var containerSection = document.getElementById("reservo-container");
   if (!containerSection)
   {
     containerSection = document.createElement("section");
@@ -259,11 +287,35 @@ var containerSection = document.getElementById("reservo-container");
   loadHoursForDayRelativeToToday(0);
 }
 
+function updateBusyTimes(timesArray)
+{
+	console.log("updateBusyTimes()");
+	var timeSelectElement = document.getElementById("reservo-tidspunkt");
+	var optCount = timeSelectElement.options.length;
+	
+	for (var time in timesArray)
+	{
+		for (var i = 0; i < optCount; i++)
+		{
+			if (timeSelectElement.options[i].value == time)
+			{
+				timeSelectElement.options[i].setAttribute("disabled", "disabled");
+				timeSelectElement.options[i].style.setProperty("text-decoration", "line-through");
+				break;
+			}
+		}
+	}
+}
+
 function addInputHandlers()
 {
+	console.log("addInputHandlers()");
   document.getElementById("reservo-continue-button").addEventListener("click", function(){
     findAvailableStations();
   }, false);
+  document.getElementById("reservo-person-antall").addEventListener("change", function(){
+	  loadHoursForDayRelativeToToday(document.getElementById("reservo-dato").value);
+  });
   document.getElementById("reservo-dato").addEventListener("change", function(){
     dateChanged();
   }, false);
@@ -280,9 +332,10 @@ function addInputHandlers()
 
 function addStationElementsToDOM()
 {
+	console.log("addStationElementsToDOM()");
   if (!reservoRestaurantData.stations)
   {
-    loadAvailableStationsForPlaceTimeAndPeople(5, 1364302096, 6, true);
+    loadAvailableStationsForPlaceTimeAndPeople(reservoRestaurantData.id, dayFromTodayAndMinutesToTimestamp(reservoBooking.date, reservoBooking.time), reservoBooking.peopleCount, true);
     return;
   }
   
@@ -401,6 +454,7 @@ function addStationElementsToDOM()
 
 function createStationSelectionSummary()
 {
+	console.log("createStationSelectionSummary()");
   if (!document.getElementById("reservo-sammendrag"))
   {
     var asideElement = document.createElement("aside");
@@ -460,6 +514,7 @@ function createStationSelectionSummary()
 /* Input handlers */
 function dateChanged()
 {
+	console.log("dateChanged()");
   var datePicker = document.getElementById("reservo-dato");
 
   loadHoursForDayRelativeToToday(datePicker.value);
@@ -467,12 +522,14 @@ function dateChanged()
 
 function timeChanged()
 {
+	console.log("timeChanged()");
   reservoBooking.time = document.getElementById("reservo-tidspunkt").value;
 }
 
 /* Navigation */
 function showAvailableStations()
 {
+	console.log("showAvailableStations()");
   reservoBooking.name = document.getElementById("reservo-navn").value;
   reservoBooking.date = document.getElementById("reservo-dato").value;
   reservoBooking.time = document.getElementById("reservo-tidspunkt").value;
@@ -493,8 +550,6 @@ function showAvailableStations()
   }
   */
 
-  console.log(reservoBooking);
-
   var inputSection = document.getElementById("reservo-brev");
   var stationSection = document.getElementById("reservo-bordvalg");
   var containerSection = document.getElementById("reservo-container");
@@ -513,6 +568,7 @@ function showAvailableStations()
 
 function backToInputFields()
 {
+	console.log("backToInputFields()");
   reservoRestaurantData.station = null;
 
   var inputSection = document.getElementById("reservo-brev");
@@ -531,11 +587,13 @@ function backToInputFields()
 /* Button / Control functions */
 function loadReservoWithRestaurant(id)
 {
+	console.log("loadReservoWithRestaurant()");
   loadRestaurant(id, true, false);
 }
 
 function findAvailableStations()
 {
+	console.log("findAvailableStations()");
   if (!reservoRestaurantData)
     loadRestaurant(reservoRestaurantId, false, true);
   else
@@ -544,16 +602,19 @@ function findAvailableStations()
 
 function selectNextStation()
 {
+	console.log("selectNextStation()");
   scrollStationPickerTo(document.getElementById("reservo-karusell-wrapper").scrollLeft+300);
 }
 
 function selectPrevStation()
 {
+	console.log("selectPrevStation()");
   scrollStationPickerTo(document.getElementById("reservo-karusell-wrapper").scrollLeft-300);
 }
 
 function scrollStationPickerTo(target)
 {
+	console.log("scrollStationPickerTo()");
   reservoBoolAutoscrolling = true;
   
   var wrapper = document.getElementById("reservo-karusell-wrapper");
@@ -590,6 +651,7 @@ function setClassOnElement(theClass, theElement)
 /* Math and converting helpers */
 function dayFromTodayAndMinutesToTimestamp(dayFromToday, minutes)
 {
+	console.log("dayFromTodayAndMinutesToTimestamp()");
 	var date = new Date();
   date.setDate(date.getDate()+parseInt(dayFromToday));
   date.setUTCHours(0,minutes,0,0);
