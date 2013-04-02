@@ -559,8 +559,9 @@ function showAvailableStations()
   setClassOnElement("reservo-active", stationSection);
   setClassOnElement("reservo-bordvalg-active", containerSection);
 
-  containerSection.style.width = reservoBordBredde+"px";
-  containerSection.style.marginLeft = "-"+(reservoBordBredde/2)+"px";
+  // Fjernet midlertidig for å teste setting av disse med klasser. -KR
+  /* containerSection.style.width = reservoBordBredde+"px";
+  containerSection.style.marginLeft = "-"+(reservoBordBredde/2)+"px"; */
 
   addStationElementsToDOM();
   createStationSelectionSummary();
@@ -580,8 +581,9 @@ function backToInputFields()
   removeClassFromElement("reservo-bordvalg-active", containerSection);
   setClassOnElement("reservo-brev-active", containerSection);
 
-  containerSection.style.width = reservoBrevBredde+"px";
-  containerSection.style.marginLeft = "-"+(reservoBrevBredde/2)+"px";
+  // Fjernet midlertidig for å teste setting av disse med klasser. -KR
+  /* containerSection.style.width = reservoBrevBredde+"px";
+  containerSection.style.marginLeft = "-"+(reservoBrevBredde/2)+"px"; */
 }
 
 /* Button / Control functions */
