@@ -328,78 +328,7 @@ function addInputHandlers()
 	  	document.getElementById("reservo-container").parentNode.removeChild(document.getElementById("reservo-container"));
   	}, 1000);
   }, false);
-}
-
-function addStationElementsToDOM()
-{
-	console.log("addStationElementsToDOM()");
-  if (!reservoRestaurantData.stations)
-  {
-    loadAvailableStationsForPlaceTimeAndPeople(reservoRestaurantData.id, dayFromTodayAndMinutesToTimestamp(reservoBooking.date, reservoBooking.time), reservoBooking.peopleCount, true);
-    return;
-  }
-
-  var first = true;
-  for (var station in reservoRestaurantData.stations)
-  {
-    var stationObject = reservoRestaurantData.stations[station];
-
-    var stationElement = document.createElement("li");
-    stationElement.id = "station"+stationObject.id;
-
-    if (first == true)
-    {
-      reservoBooking.station = stationObject.id;
-      stationElement.className = "reservo-bord-anbefalt ";
-      first = false;
-    }
-
-    var stationImage = new Image();
-    stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
-    if (reservoRetina)
-      stationImage.src = stationImage.src.replace('.jpg', '@2x.jpg');
-    stationImage.height = "280";
-    stationImage.width = "280";
-    stationElement.appendChild(stationImage);
-
-    if (!document.getElementById("reservo-bord"))
-    {
-      divElement = document.createElement("div");
-      divElement.id = "reservo-bord";
-      divElement.className = "reservo-bord";
-
-      var prevArrow = document.createElement("a");
-      prevArrow.id = "reservo-forrige-bord";
-      prevArrow.className = "reservo-forrige-bord";
-      prevArrow.href = "javascript:void(0)";
-      prevArrow.innerHTML = "⟨";
-      divElement.appendChild(prevArrow);
-
-      wrapperElement = document.createElement("div");
-      wrapperElement.id = "reservo-karusell-wrapper";
-      wrapperElement.className = "reservo-karusell-wrapper";
-
-      ulElement = document.createElement("ul");
-      ulElement.id = "reservo-karusell";
-      ulElement.className = "reservo-karusell";
-
-      wrapperElement.appendChild(ulElement);
-      divElement.appendChild(wrapperElement);
-
-      var nextArrow = document.createElement("a");
-      nextArrow.id = "reservo-neste-bord";
-      nextArrow.className = "reservo-neste-bord";
-      nextArrow.href = "javascript:void(0)";
-      nextArrow.innerHTML = "⟩";
-      divElement.appendChild(nextArrow);
-
-      document.getElementById("reservo-bordvalg").appendChild(divElement);
-    }
-
-    reservoAvailableStations.push(stationElement);
-    document.getElementById("reservo-karusell").appendChild(stationElement);
-  }
-
+  
   document.getElementById("reservo-forrige-bord").addEventListener("click", function(){
     selectPrevStation();
   });
@@ -407,9 +336,8 @@ function addStationElementsToDOM()
   document.getElementById("reservo-neste-bord").addEventListener("click", function(){
     selectNextStation();
   });
-
-  document.getElementById("reservo-karusell").style.width = (300*reservoAvailableStations.length-20)+"px"; // -20 because the wrapper is 280, not 300
-
+  
+  
   var timer = null;
   document.getElementById("reservo-karusell-wrapper").addEventListener("scroll", function(){
     var wrapper = document.getElementById("reservo-karusell-wrapper");
@@ -450,6 +378,97 @@ function addStationElementsToDOM()
           }, 200);
     }, 150);
   }, false);
+}
+
+function addStationElementsToDOM()
+{
+	console.log("addStationElementsToDOM()");
+  if (!reservoRestaurantData.stations)
+  {
+    loadAvailableStationsForPlaceTimeAndPeople(reservoRestaurantData.id, dayFromTodayAndMinutesToTimestamp(reservoBooking.date, reservoBooking.time), reservoBooking.peopleCount, true);
+    return;
+  }
+
+  var first = true;
+  
+  addStationToDOM(reservoRestaurantData.stations[reservoRestaurantData.stations.length-1], false, false);
+  
+  for (var station in reservoRestaurantData.stations)
+  {
+  	addStationToDOM(reservoRestaurantData.stations[station], first, true)
+    if (first == true)
+	    first = false;
+  }
+  
+  addStationToDOM(reservoRestaurantData.stations[0], false, false);
+
+  document.getElementById("reservo-karusell").style.width = (300*reservoAvailableStations.length+600-20)+"px"; // +600 to get pre- and after images. -20 because the wrapper is 280, not 300
+  scrollStationPickerTo(300);
+
+}
+
+function addStationToDOM(stationObject, first, pushToArray)
+{
+    var stationElement = document.createElement("li");
+    stationElement.id = "station"+stationObject.id;
+
+    if (first == true)
+    {
+      reservoBooking.station = stationObject.id;
+      stationElement.className = "reservo-bord-anbefalt ";
+    }
+
+    var stationImage = new Image();
+    stationImage.src = "http://pido.cc/img/stationImages/"+stationObject.imageName;
+    if (reservoRetina)
+      stationImage.src = stationImage.src.replace('.jpg', '@2x.jpg');
+    stationImage.height = "280";
+    stationImage.width = "280";
+    stationElement.appendChild(stationImage);
+
+    if (!document.getElementById("reservo-bord"))
+    {
+      addStationWrapperElement();
+    }
+  
+    if (pushToArray)
+	    reservoAvailableStations.push(stationElement);
+  
+    document.getElementById("reservo-karusell").appendChild(stationElement);
+}
+
+function addStationWrapperElement()
+{
+	divElement = document.createElement("div");
+      divElement.id = "reservo-bord";
+      divElement.className = "reservo-bord";
+
+      var prevArrow = document.createElement("a");
+      prevArrow.id = "reservo-forrige-bord";
+      prevArrow.className = "reservo-forrige-bord";
+      prevArrow.href = "javascript:void(0)";
+      prevArrow.innerHTML = "⟨";
+      divElement.appendChild(prevArrow);
+
+      wrapperElement = document.createElement("div");
+      wrapperElement.id = "reservo-karusell-wrapper";
+      wrapperElement.className = "reservo-karusell-wrapper";
+
+      ulElement = document.createElement("ul");
+      ulElement.id = "reservo-karusell";
+      ulElement.className = "reservo-karusell";
+
+      wrapperElement.appendChild(ulElement);
+      divElement.appendChild(wrapperElement);
+
+      var nextArrow = document.createElement("a");
+      nextArrow.id = "reservo-neste-bord";
+      nextArrow.className = "reservo-neste-bord";
+      nextArrow.href = "javascript:void(0)";
+      nextArrow.innerHTML = "⟩";
+      divElement.appendChild(nextArrow);
+
+      document.getElementById("reservo-bordvalg").appendChild(divElement);
 }
 
 function createStationSelectionSummary()
@@ -632,8 +651,16 @@ function scrollStationPickerTo(target)
 
   var stopTimer = setTimeout(function(){
     clearInterval(intervalTimer);
+    if (target >= document.getElementById("reservo-karusell").offsetWidth - 450)
+    	target = 300;
+    else if (target <= 150)
+    	target = document.getElementById("reservo-karusell").offsetWidth - 580;
     wrapper.scrollLeft = target;
-    reservoBoolAutoscrolling = false;
+    console.log("Scrolled to target "+target);
+    setTimeout(function(){ // Delay to stop scrolling to trigger in the last millisecond.
+	    reservoBoolAutoscrolling = false;
+	    wrapper.scrollLeft = target;
+    }, 50);
   }, 200);
 }
 
