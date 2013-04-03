@@ -74,7 +74,7 @@ body {
   text-align: center;
   height: 40px;
   line-height: 40px;
-  width: 75%;
+  width: 300px;
   border: 2px solid hsl(0,0%,4%);
   border-radius: 22px;
   -moz-background-clip: padding;
@@ -237,10 +237,7 @@ body {
   float: left;
   width: 340px;
   margin: 20px 28px 0;
-}
-
-.reservo-sammendrag .reservo-button {
-  width: 100%;
+  text-align: center;
 }
 
 .reservo-sammendrag fieldset {
